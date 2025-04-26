@@ -31,7 +31,7 @@ app.use(express.json());
 
 // Create a connection to the database
 const db = mysql.createPool({
-  host: "localhost",
+  host: "localhost", 
   user: "root",      
   password: `${process.env.DB_PASSWORD}`, 
   database: "mtsfitness",   
@@ -41,7 +41,7 @@ const db = mysql.createPool({
 
 app.use(cors({
   origin: [
-    `http://${process.env.VITE_FRONTEND_HOST}`
+    `${process.env.VITE_FRONTEND_HOST}`
   ],
   credentials: true,
   exposedHeaders: ['set-cookie']
@@ -118,13 +118,13 @@ app.get('/',  async (req, res) => {
         const sql = 'INSERT INTO users (first_name, last_name, email, created_at) VALUES ( ?, ?, ?, ?)';
         const [result] = await db.query(sql, [first_name, last_name, email,date]);
           
-        return res.redirect(`http://${process.env.VITE_FRONTEND_HOST}/questionaire`);
+        return res.redirect(`${process.env.VITE_FRONTEND_HOST}/questionaire`);
         //create account and go to questionaire to add extra details
       }
 
       //account is already created with extra information added, send user to dashboard
       
-      return res.redirect(`http://${process.env.VITE_FRONTEND_HOST}/dashboard`);
+      return res.redirect(`${process.env.VITE_FRONTEND_HOST}/dashboard`);
     }
     catch(error){
       console.error("Database Error:", error);
@@ -132,7 +132,7 @@ app.get('/',  async (req, res) => {
     }
   }
 
-  return res.redirect(`http://${process.env.VITE_FRONTEND_HOST}`);
+  return res.redirect(`${process.env.VITE_FRONTEND_HOST}`);
 
 });
 
@@ -142,6 +142,8 @@ app.get('/profile', requiresAuth(), (req, res) => {
 });
 
 app.get('/suggestion',requiresAuth(), async (req,res) => {
+
+  console.log("url" , `${process.env.API_HOST}`)
 
   const mSuggestion =  [['cardiovascular system'],['Upper Back','Biceps'],['Glutes','Hamstrings'],
   ['Pectorals','Triceps','Abs'],['Delts','cardiovascular system'],['Upper Back', 'Biceps','Forearm'],['cardiovascular system']]
@@ -179,8 +181,8 @@ app.get('/suggestion',requiresAuth(), async (req,res) => {
 })
 
 app.get('/logout', (req, res) => {
-  const returnTo = encodeURIComponent(`http://${process.env.VITE_FRONTEND_HOST}/logout-success`); 
-  res.redirect(`https://${process.env.AUTH0_ISSUER_BASE_URL}/v2/logout?client_id=${process.env.AUTH0_CLIENT_ID}&returnTo=${returnTo}`);
+  const returnTo = encodeURIComponent(`${process.env.VITE_FRONTEND_HOST}/logout-success`); 
+  res.redirect(`${process.env.AUTH0_ISSUER_BASE_URL}/v2/logout?client_id=${process.env.AUTH0_CLIENT_ID}&returnTo=${returnTo}`);
 });
 
 // Example route to fetch data from the users table
